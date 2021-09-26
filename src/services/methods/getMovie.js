@@ -1,9 +1,9 @@
 import { instance } from '../axios';
 import { apiKey } from '../../utils/constants';
 
-export const getList = async (page) => {
+export const getMovie = async (movieId) => {
   const res = await instance.get(
-      `movie/popular?api_key=${apiKey}&language=en-US&page=${page}`
+      `movie/${movieId}api_key=${apiKey}&language=en-US&`
       );
   return res.data;
 }
