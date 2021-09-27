@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function List() {
   const [page, setPage] = useState(1)
-  const [listId, setListId] = useState(1)  
+  const [listId, setListId] = useState(1) 
+  const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient()
   const classes = useStyles();
@@ -39,7 +40,7 @@ export default function List() {
   const { status, data, error, isFetching, isPreviousData } = useList(page, listId)
 
   const resTotalPage = data?.total_pages;
-  const resPage = data?.page;
+  const resPage = data?.page; 
 
   const totalPageRef = useRef();
 
@@ -65,13 +66,13 @@ export default function List() {
       <div>
         <div className={classes.title}>
           {error}
-          <h2>Popular Movies</h2>          
+          <h2>Popular Movies</h2>
         </div>
         <Divider />
         {data?.results.length > 0 ? (
           data?.results.map((movie, key) => (
             <li key={key}> 
-              <Link to={`/movie/${movie.id}`}>{movie.original_title}</Link>
+              <Link to={`/movie/${movie.id}`} onClick={() => setOpen(true)}>{movie.original_title}</Link>
             </li>
           ))
         ) : 'This list has no result'}
@@ -91,7 +92,7 @@ export default function List() {
 
         <Switch>
           <Route path="/movie/:movieId">
-            <Movies />
+            <Movies open={open}/>
           </Route>
         </Switch>        
       </div>
