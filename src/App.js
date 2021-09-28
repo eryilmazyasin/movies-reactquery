@@ -1,12 +1,9 @@
 import './App.css';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query'
-import Container from '@material-ui/core/Container';
+import {QueryClient, QueryClientProvider} from 'react-query'
 import React from 'react';
-import List from './components/List';
+import Layout from './Layout';
 import { ReactQueryDevtools } from 'react-query/devtools'
+import {BrowserRouter as Router} from "react-router-dom";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -20,10 +17,10 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Container>
-        <List></List>
-      </Container>
-      <ReactQueryDevtools initialIsOpen={false}/>
+      <Router>
+        <Layout />  
+        <ReactQueryDevtools initialIsOpen={false} />
+      </Router>
     </QueryClientProvider>
 
   );

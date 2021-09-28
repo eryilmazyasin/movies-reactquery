@@ -18,45 +18,45 @@ const style = {
     p: 4,
   };
 
-export default function Movies({ open }) {    
+export default function Movies() {
+    const [open, setOpen] = React.useState(false);
+
     // We can use the `useParams` hook here to access
     // the dynamic pieces of the URL.
     let { movieId } = useParams();
 
-    const { data, isFetching } = useMovie(movieId);    
+    const { data, isFetching } = useMovie(movieId);
 
-    const handleClose = () => {
-        alert('yes');
-    }
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
-        console.log('mount oluyor')
-        console.log(data);
-        return () => {
-            console.log('unmount oluyor')
-        }
+        setOpen(true)
     }, [data])
 
     return (
         <div>
-            { !isFetching ? (
+            
                 <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-            >
+                >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        {data.title}
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <Image src={data.backdrop_path} width="100%"/>
-                        Popularity: {data.popularity}
-                    </Typography>
+                    {!isFetching ? (
+                    <>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            {data.title}
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Image src={data.backdrop_path} width="100%"/>
+                            Popularity: {data.popularity}
+                        </Typography>
+                    </>
+                ) : 'loading...'}
                 </Box>
             </Modal>
-            ) : 'loading...'}
+            
         </div>
     );
 }

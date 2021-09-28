@@ -6,12 +6,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import { useQueryClient } from 'react-query'
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +57,7 @@ export default function List() {
   }
 
   return (
-    <Router>
+    <>
       <div>
         <div className={classes.title}>
           {error}
@@ -88,14 +83,8 @@ export default function List() {
         <Divider />
         <div>
           <small ref={totalPageRef}>Total Page: {resTotalPage}</small>
-        </div>
-
-        <Switch>
-          <Route path="/movie/:movieId">
-            <Movies open={open}/>
-          </Route>
-        </Switch>        
+        </div>    
       </div>
-    </Router>
+    </>
   );
 }
