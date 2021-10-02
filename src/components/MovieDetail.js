@@ -21,9 +21,7 @@ const style = {
 
 export default function Movies({ open, setOpen }) {
   //const [open, setOpen] = React.useState(false);
-  const history = useHistory();
-
-  console.log({ history });
+  const history = useHistory();  
 
   // We can use the `useParams` hook here to access
   // the dynamic pieces of the URL.
@@ -35,8 +33,6 @@ export default function Movies({ open, setOpen }) {
     setOpen(false);
     history.push("/popularMovies");
   };
-
-  console.log({ open });
 
   useEffect(() => {
     setOpen(true);
