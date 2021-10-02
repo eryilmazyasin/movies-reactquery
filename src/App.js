@@ -18,7 +18,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Layout />  
+        <Layout />
         <ReactQueryDevtools initialIsOpen={false} />
       </Router>
     </QueryClientProvider>
