@@ -16,6 +16,19 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Link } from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& a': {
+      color: 'black',
+      textDecoration: 'none',
+      '&:active': {
+        color: '#5a4444'
+      }
+    }
+  }
+}))
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -31,6 +44,13 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: "auto",
   },
+}));
+
+const LinkItem = styled(Link)(({ theme }) => ({
+  paddingBlockStart: '1em',
+  paddingBlockEnd: '1em',
+  paddingInlineStart: '0px',
+  paddingInlineEnd: '0px'
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -63,6 +83,8 @@ export default function PrimarySearchAppBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const classes = useStyles();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -156,8 +178,8 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ flexGrow: 1 }} className={classes.root}>
+      <AppBar position="static" color='transparent'>
         <Toolbar>
           <IconButton
             size="large"
@@ -174,7 +196,7 @@ export default function PrimarySearchAppBar() {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            MUI
+            Movies API
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -186,13 +208,13 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <MenuItem>
-            <Link to="/">Home</Link>
+            <LinkItem to="/">Home</LinkItem>
           </MenuItem>
           <MenuItem>
-            <Link to="/popularMovies">Popular Movies</Link>
+            <LinkItem to="/popularMovies">Popular Movies</LinkItem>
           </MenuItem>
           <MenuItem>
-            <p>Top Rated Movies</p>
+            <LinkItem to="/topRatedMovies">Top Movies</LinkItem>
           </MenuItem>
           <MenuItem>
             <p>Latest Movies</p>

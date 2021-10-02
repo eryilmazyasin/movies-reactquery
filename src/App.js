@@ -1,7 +1,7 @@
 import './App.css';
 import {QueryClient, QueryClientProvider} from 'react-query'
 import React from 'react';
-import Layout from './Layout';
+import Layout from './Layouts/Layout';
 import { ReactQueryDevtools } from 'react-query/devtools'
 import {BrowserRouter as Router} from "react-router-dom";
 

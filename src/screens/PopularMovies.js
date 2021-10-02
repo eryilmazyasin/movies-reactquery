@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useList } from "../services/useList";
-import { getList } from "../services/methods/getList";
+import { usePopularMovies } from "../services/usePopularMovies";
+import { getPopularMovies } from "../services/methods/getPopularMovies";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import { useQueryClient } from "react-query";
@@ -30,7 +30,7 @@ export default function PopularMovies() {
   const queryClient = useQueryClient();
   const classes = useStyles();
 
-  const { status, data, error, isFetching, isPreviousData } = useList(
+  const { status, data, error, isFetching, isPreviousData } = usePopularMovies(
     page,
     listId
   );
@@ -43,8 +43,8 @@ export default function PopularMovies() {
   // Prefetch the next page!
   useEffect(() => {
     if (data?.total_pages > 1) {
-      queryClient.prefetchQuery(["getList", page + 1, listId + 1], () =>
-        getList(page + 1, listId + 1)
+      queryClient.prefetchQuery(["getPopularMovies", page + 1, listId + 1], () =>
+        getPopularMovies(page + 1, listId + 1)
       );
     }
   }, [data, page, queryClient, listId]);
@@ -66,7 +66,7 @@ export default function PopularMovies() {
           {error}
           <h2>Popular Movies</h2>
         </div>
-        <Divider />
+        <Divider style={{ marginBottom: 20 }}/>
         {data?.results.length > 0
           ? data?.results.map((movie, key) => (
               <li key={key}>
