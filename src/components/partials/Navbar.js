@@ -15,6 +15,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -185,7 +186,10 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <MenuItem>
-            <p>Home</p>
+            <Link to="/">Home</Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to="/popularMovies">Popular Movies</Link>
           </MenuItem>
           <MenuItem>
             <p>Top Rated Movies</p>
