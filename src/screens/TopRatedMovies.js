@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { pageNames } from "../utils/constants";
+import { pages } from "../utils/constants";
 import { Helmet } from "react-helmet";
 
 //React Query
@@ -77,11 +77,11 @@ export default function TopRatedMovies() {
     <>
       <div className={classes.root}>
         <Helmet>
-          <title>{pageNames[2].title}</title>
+          <title>{pages[2].title}</title>
         </Helmet>
         <div className={classes.title}>
           {error}
-          <h2>{pageNames[2].title}</h2>
+          <h2>{pages[2].title}</h2>
         </div>
         <Divider style={{ marginBottom: 20 }}/>
         {data?.results.length > 0

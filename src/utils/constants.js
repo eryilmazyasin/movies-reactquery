@@ -4,7 +4,7 @@ export const accessToken =
 export const APP_NAME = "React Query";
 export const CDN = "https://image.tmdb.org/t/p/w500/";
 
-export const pageNames = [
+export const pages = [
   {
     title: "Home",
     to: "/",
@@ -16,9 +16,5 @@ export const pageNames = [
   {
     title: "Top Movies",
     to: "/topRatedMovies",
-  },
-  {
-    title: "Latest Movies",
-    to: "/latestMovies",
-  },
+  }
 ];

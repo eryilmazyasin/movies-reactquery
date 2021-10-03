@@ -17,7 +17,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
-import { pageNames } from '../../utils/constants'
+import { pages } from '../../utils/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,14 +105,12 @@ export default function PrimarySearchAppBar() {
   };
 
   const renderMenuItems = (
-    pageNames.map((item, id) => (
+    pages.map((item, id) => (
       <MenuItem key={id}>
             <LinkItem to={`${item.to}`}>{item.title}</LinkItem>
       </MenuItem>
     ))
   )
-
-  console.log(pageNames);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
