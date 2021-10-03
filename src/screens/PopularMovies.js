@@ -7,12 +7,19 @@ import { useQueryClient } from "react-query";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import MovieDetail from "../components/MovieDetail";
+import { useRouteMatch } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
     },
+    "& a ": {
+      fontSize: 16,
+      color: 'black',
+      textDecoration: 'none',
+      padding: 5,      
+    }
   },
   title: {
     display: "flex",
@@ -29,6 +36,10 @@ export default function PopularMovies() {
 
   const queryClient = useQueryClient();
   const classes = useStyles();
+
+  const history = useRouteMatch();
+
+  console.log({history})
 
   const { status, data, error, isFetching, isPreviousData } = usePopularMovies(
     page,
@@ -61,10 +72,10 @@ export default function PopularMovies() {
 
   return (
     <>
-      <div>
+      <div className={classes.root}>
         <div className={classes.title}>
           {error}
-          <h2>Popular Movies</h2>
+          <h2>Top Movies</h2>
         </div>
         <Divider style={{ marginBottom: 20 }}/>
         {data?.results.length > 0
