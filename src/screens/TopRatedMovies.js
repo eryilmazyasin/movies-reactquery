@@ -9,12 +9,12 @@ import { getTopRatedMovies } from "../services/methods/getTopRatedMovies";
 import { useQueryClient } from "react-query";
 
 //MUI
-import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 
 //Components
 import MovieDetail from "../components/MovieDetail";
+import Pagination from '../components/Pagination';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,14 +63,6 @@ export default function TopRatedMovies() {
     }
   }, [data, page, queryClient, listId]);
 
-  const nextPage = () => {
-    setPage((old) => (data?.total_pages > 1 ? old + 1 : old));
-  };
-
-  const prevPage = () => {
-    setPage((old) => Math.max(old - 1, 0));
-  };
-
   const movieDetailModal = open && <MovieDetail open={open} setOpen={setOpen} />;  
 
   return (
@@ -97,23 +89,15 @@ export default function TopRatedMovies() {
             ))
           : "This list has no result"}
       </div>
-      <div className={classes.root}>
-        <Button variant="contained" onClick={prevPage} disabled={resPage === 1}>
-          Prev
-        </Button>
-        <span>{page}</span>
-        <Button
-          variant="contained"
-          onClick={nextPage}
-          disabled={isPreviousData || resTotalPage <= resPage}
-        >
-          Next
-        </Button>
-        <Divider />
-        <div>
-          <small ref={totalPageRef}>Total Page: {resTotalPage}</small>
-        </div>
-      </div>
+
+      <Pagination        
+        resPage={resPage}
+        page={page}
+        setPage={setPage}
+        isPreviousData={isPreviousData}
+        resTotalPage={resTotalPage}
+        totalPageRef={totalPageRef}      
+      />
 
       {movieDetailModal}
     </>
