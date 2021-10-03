@@ -214,7 +214,7 @@ export default function PrimarySearchAppBar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Search movie.."
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
