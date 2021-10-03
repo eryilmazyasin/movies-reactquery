@@ -17,6 +17,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import { pageNames } from '../../utils/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,6 +103,16 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const renderMenuItems = (
+    pageNames.map((item, id) => (
+      <MenuItem key={id}>
+            <LinkItem to={`${item.to}`}>{item.title}</LinkItem>
+      </MenuItem>
+    ))
+  )
+
+  console.log(pageNames);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -207,18 +218,7 @@ export default function PrimarySearchAppBar() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <MenuItem>
-            <LinkItem to="/">Home</LinkItem>
-          </MenuItem>
-          <MenuItem>
-            <LinkItem to="/popularMovies">Popular Movies</LinkItem>
-          </MenuItem>
-          <MenuItem>
-            <LinkItem to="/topRatedMovies">Top Movies</LinkItem>
-          </MenuItem>
-          <MenuItem>
-            <p>Latest Movies</p>
-          </MenuItem>
+          { renderMenuItems }
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton

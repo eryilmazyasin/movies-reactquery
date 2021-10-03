@@ -29,9 +29,11 @@ export default function Movies({ open, setOpen }) {
 
   const { data, isFetching } = useMovie(movieId);
 
+  console.log({history});
+
   const handleClose = () => {
     setOpen(false);
-    history.push("/popularMovies");
+    history.goBack();
   };
 
   useEffect(() => {

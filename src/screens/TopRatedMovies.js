@@ -1,11 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import { pageNames } from "../utils/constants";
+import { Helmet } from "react-helmet";
+
+//React Query
 import { useTopRatedMovies } from "../services/useTopRatedMovies";
 import { getTopRatedMovies } from "../services/methods/getTopRatedMovies";
+import { useQueryClient } from "react-query";
+
+//MUI
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-import { useQueryClient } from "react-query";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+
+//Components
 import MovieDetail from "../components/MovieDetail";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PopularMovies() {
+export default function TopRatedMovies() {
   const [page, setPage] = useState(1);
   const [listId, setListId] = useState(1);
   const [open, setOpen] = useState(false);
@@ -63,21 +71,24 @@ export default function PopularMovies() {
     setPage((old) => Math.max(old - 1, 0));
   };
 
-  const movieDetailModal = open && <MovieDetail open={open} setOpen={setOpen} />;
+  const movieDetailModal = open && <MovieDetail open={open} setOpen={setOpen} />;  
 
   return (
     <>
       <div className={classes.root}>
+        <Helmet>
+          <title>{pageNames[2].title}</title>
+        </Helmet>
         <div className={classes.title}>
           {error}
-          <h2>Popular Movies</h2>
+          <h2>{pageNames[2].title}</h2>
         </div>
         <Divider style={{ marginBottom: 20 }}/>
         {data?.results.length > 0
           ? data?.results.map((movie, key) => (
               <li key={key}>
                 <Link
-                  to={`/popularMovies/${movie.id}`}
+                  to={`/topRatedMovies/${movie.id}`}
                   onClick={() => setOpen(true)}
                 >
                   {movie.original_title}
