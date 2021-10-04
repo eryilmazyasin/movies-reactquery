@@ -87,7 +87,7 @@ export default function TopRatedMovies() {
                 </Link>
               </li>
             ))
-          : "This list has no result"}
+          : "Loading..."}
       </div>
 
       <Pagination        

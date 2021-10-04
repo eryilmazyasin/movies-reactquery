@@ -90,7 +90,7 @@ export default function PopularMovies() {
                 </Link>
               </li>
             ))
-          : "This list has no result"}
+          : "Loading..."}
       </div>
 
       <Pagination        
