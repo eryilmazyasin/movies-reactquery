@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 //Components
 import MovieDetail from "../components/MovieDetail";
 import Pagination from '../components/Pagination';
+import { useGlobalState } from '../../src/providers/GlobalStateProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +54,10 @@ export default function TopRatedMovies() {
   const resPage = data?.page;
 
   const totalPageRef = useRef();
+
+  const { favorite } = useGlobalState();
+
+  console.log(favorite);
 
   // Prefetch the next page!
   useEffect(() => {
