@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,6 +18,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { pages } from '../../utils/constants'
+
+import { useGlobalState } from '../../../src/providers/GlobalStateProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,13 +81,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [favoritesLength, setFavoritesLength] = useState(0);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const classes = useStyles();
+
+  const { favorites } = useGlobalState();
+
+  useEffect(() => {
+    setFavoritesLength(favorites.length)
+  }, [])
+
+  useEffect(() => {
+    setFavoritesLength(favorites.length);
+  }, [favorites.length])
+
+  console.log(favoritesLength);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -103,6 +118,7 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
 
   const renderMenuItems = (
     pages.map((item, id) => (
@@ -153,7 +169,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={0} color="error">
+          <Badge badgeContent={favoritesLength} color="error">
             <FavoriteIcon />
           </Badge>
         </IconButton>
@@ -224,7 +240,7 @@ export default function PrimarySearchAppBar() {
               aria-label="show 4 new mails"
               color="inherit"
             >
-              <Badge badgeContent={0} color="error">
+              <Badge badgeContent={favoritesLength} color="error">
                 <FavoriteIcon />
               </Badge>
             </IconButton>

@@ -1,9 +1,11 @@
-import { useParams } from "react-router-dom";
-import { useMovie } from "../services/useMovie";
+
 import React, { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useMovie } from "../services/useMovie";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@mui/material/Modal";
-import { useHistory } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -19,7 +21,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 import { CDN } from "../utils/constants";
+
+import { useGlobalState } from '../../src/providers/GlobalStateProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,7 +77,20 @@ export default function Movies({ open, setOpen }) {
 
   const { data, isFetching } = useMovie(movieId);
 
-  console.log({ data });
+  const { favorites, setFavorites } = useGlobalState();
+
+
+  const handleAddFavorite = (e) => {
+    e.preventDefault();
+
+    favorites.unshift({
+      id: movieId,
+      title: data?.title,
+      image: CDN + data?.backdrop_path
+    })
+  }
+
+  console.log({favorites});
 
   const handleClose = () => {
     setOpen(false);
@@ -134,7 +152,7 @@ export default function Movies({ open, setOpen }) {
               </Typography>
             </CardContent>
             <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
+              <IconButton aria-label="add to favorites" onClick={handleAddFavorite}>
                 <FavoriteIcon />
               </IconButton>
               <IconButton aria-label="share">

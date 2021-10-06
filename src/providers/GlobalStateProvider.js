@@ -1,16 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const GlobalStateContext = React.createContext();
 
 const GlobalStateProvider = (props) => {
-    const [favorite, setFavorite] = useState({
-        id: null,
-        title: '',
-        img: ''        
-    })
+    const [favorites, setFavorites] = useState([]);
 
     return (
-        <GlobalStateContext.Provider value={{ favorite, setFavorite }}>
+        <GlobalStateContext.Provider value={{ favorites, setFavorites }}>
             {props.children}
         </GlobalStateContext.Provider>
     )
