@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -24,7 +23,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { CDN } from "../utils/constants";
 
-import { useGlobalState } from '../../src/providers/GlobalStateProvider';
+import { useGlobalState } from "../../src/providers/GlobalStateProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +62,7 @@ const ExpandMore = styled((props) => {
 
 export default function Movies({ open, setOpen }) {
   const [expanded, setExpanded] = useState(false);
+  const [isFav, setIsFav] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -79,18 +79,28 @@ export default function Movies({ open, setOpen }) {
 
   const { favorites, setFavorites } = useGlobalState();
 
-
-  const handleAddFavorite = (e) => {
-    e.preventDefault();
-
-    favorites.unshift({
+  const handleAddFavorite = () => {
+    const newObject = {
       id: movieId,
       title: data?.title,
-      image: CDN + data?.backdrop_path
-    })
-  }
+      image: CDN + data?.backdrop_path,
+    };
 
-  console.log({favorites});
+    if (!isFav) {
+      favorites.unshift(newObject);
+      setIsFav(true);
+    } else {
+      favorites.shift(newObject);
+      setIsFav(false);
+    }
+
+    console.log({ favorites });
+  };  
+
+  const favorited = () => {
+    const isFav = favorites.some(movie => movie.id === movieId);
+    isFav && setIsFav(true);
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -113,6 +123,7 @@ export default function Movies({ open, setOpen }) {
 
   useEffect(() => {
     setOpen(true);
+    favorited();    
   }, [data]);
 
   return (
@@ -152,8 +163,11 @@ export default function Movies({ open, setOpen }) {
               </Typography>
             </CardContent>
             <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites" onClick={handleAddFavorite}>
-                <FavoriteIcon />
+              <IconButton
+                aria-label="add to favorites"
+                onClick={handleAddFavorite}
+              >
+                <FavoriteIcon sx={isFav && { color: red[500] }} />
               </IconButton>
               <IconButton aria-label="share">
                 <ShareIcon />
@@ -195,7 +209,9 @@ export default function Movies({ open, setOpen }) {
                   <Typography variant="subtitle1" component="div">
                     <strong>Language</strong> <br></br>
                     {/* Dil seçeneklerini fonksiyona çevirip Türkçeleştir */}
-                    {data?.original_language === 'en' ? 'English' : data?.original_language}
+                    {data?.original_language === "en"
+                      ? "English"
+                      : data?.original_language}
                   </Typography>
                 )}
               </CardContent>

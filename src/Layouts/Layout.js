@@ -9,7 +9,7 @@ export default function Layout() {
       <Container maxWidth={false} disableGutters={true}>
         <Navbar></Navbar>
       </Container>
-      <Container style={{ padding: 10 }}>
+      <Container style={{ padding: 10 }}>        
         <Routes />
       </Container>
     </>
