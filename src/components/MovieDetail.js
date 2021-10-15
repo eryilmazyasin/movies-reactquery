@@ -87,14 +87,14 @@ export default function Movies({ open, setOpen }) {
     };
 
     if (!isFav) {
-      favorites.unshift(newObject);
-      setIsFav(true);
+      favorites.unshift(newObject);      
+      setFavorites([...favorites]);
+      setIsFav(true);      
     } else {
       favorites.shift(newObject);
+      setFavorites([...favorites]);
       setIsFav(false);
     }
-
-    console.log({ favorites });
   };  
 
   const favorited = () => {
@@ -167,7 +167,7 @@ export default function Movies({ open, setOpen }) {
                 aria-label="add to favorites"
                 onClick={handleAddFavorite}
               >
-                <FavoriteIcon sx={isFav && { color: red[500] }} />
+                <FavoriteIcon sx={isFav ? { color: red[500] } : {}} />
               </IconButton>
               <IconButton aria-label="share">
                 <ShareIcon />

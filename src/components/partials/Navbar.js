@@ -82,8 +82,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const [favoritesLength, setFavoritesLength] = useState(0);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);  
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -92,15 +91,7 @@ export default function PrimarySearchAppBar() {
 
   const { favorites } = useGlobalState();
 
-  useEffect(() => {
-    setFavoritesLength(favorites.length)
-  }, [])
-
-  useEffect(() => {
-    setFavoritesLength(favorites.length);
-  }, [favorites.length])
-
-  console.log(favoritesLength);
+  console.log({ favorites });
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -169,7 +160,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={favoritesLength} color="error">
+          <Badge badgeContent={favorites.length} color="error">
             <FavoriteIcon />
           </Badge>
         </IconButton>
@@ -240,7 +231,7 @@ export default function PrimarySearchAppBar() {
               aria-label="show 4 new mails"
               color="inherit"
             >
-              <Badge badgeContent={favoritesLength} color="error">
+              <Badge badgeContent={favorites.length} color="error">
                 <FavoriteIcon />
               </Badge>
             </IconButton>
