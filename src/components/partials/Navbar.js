@@ -15,23 +15,27 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import Popper from "@mui/material/Popper";
+import Fade from "@mui/material/Fade";
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
-import { pages } from '../../utils/constants'
+import { pages } from "../../utils/constants";
 
-import { useGlobalState } from '../../../src/providers/GlobalStateProvider';
+import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& a': {
-      color: 'black',
-      textDecoration: 'none',
-      '&:active': {
-        color: '#5a4444'
-      }
-    }
-  }
-}))
+    "& a": {
+      color: "black",
+      textDecoration: "none",
+      "&:active": {
+        color: "#5a4444",
+      },
+    },
+  },
+}));
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -50,10 +54,10 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const LinkItem = styled(Link)(({ theme }) => ({
-  paddingBlockStart: '1em',
-  paddingBlockEnd: '1em',
-  paddingInlineStart: '0px',
-  paddingInlineEnd: '0px'
+  paddingBlockStart: "1em",
+  paddingBlockEnd: "1em",
+  paddingInlineStart: "0px",
+  paddingInlineEnd: "0px",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -82,9 +86,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);  
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const classes = useStyles();
@@ -92,6 +96,16 @@ export default function PrimarySearchAppBar() {
   const { favorites } = useGlobalState();
 
   console.log({ favorites });
+  console.log({ anchorEl });
+
+  const handlePopperClick = (e) => {    
+    setAnchorEl(e.currentTarget);
+    setOpen(!open);
+  }
+
+  const handleClickAway = () => {    
+    setOpen(false);
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -110,36 +124,13 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-
-  const renderMenuItems = (
-    pages.map((item, id) => (
-      <MenuItem key={id}>
-            <LinkItem to={`${item.to}`}>{item.title}</LinkItem>
-      </MenuItem>
-    ))
-  )
+  const renderMenuItems = pages.map((item, id) => (
+    <MenuItem key={id}>
+      <LinkItem to={`${item.to}`}>{item.title}</LinkItem>
+    </MenuItem>
+  ));
 
   const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -166,36 +157,12 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }} className={classes.root}>
-      <AppBar position="static" color='transparent'>
+      <AppBar position="static" color="transparent">
         <Toolbar>
           <IconButton
             size="large"
@@ -223,38 +190,18 @@ export default function PrimarySearchAppBar() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          { renderMenuItems }
+          {renderMenuItems}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
+              aria-label="show favorites"
               color="inherit"
             >
-              <Badge badgeContent={favorites.length} color="error">
+              <Badge badgeContent={favorites.length} color="error" max={99} onClick={handlePopperClick}>
                 <FavoriteIcon />
               </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            </IconButton>            
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -270,8 +217,47 @@ export default function PrimarySearchAppBar() {
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      {renderMobileMenu}      
+
+      <Popper id="test" open={open && favorites.length > 0} anchorEl={anchorEl} placement="bottom-start" transition>
+        {({ TransitionProps }) => (
+          <ClickAwayListener onClickAway={handleClickAway}>
+          <Fade {...TransitionProps}>
+            <Box
+              sx={{
+                boxShadow: 3,
+                p: 1,
+                bgcolor: "background.paper",
+                maxWidth: "300px",
+                maxHeight: "350px",
+                overflow: "hidden",
+                overflowY: "auto",
+              }}
+            >
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3>Favorites</h3>
+              <small >{favorites.length} item</small>
+              </Box>              
+              {favorites.map((item) => (
+                <Box
+                  key={item.id}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    background: "#f3f3f3",
+                  }}
+                  my={1}
+                >
+                  <img src={item.image} alt={item.id} width="100"></img>
+                  <h5 style={{ marginLeft: "5px" }}>{item.title}</h5>
+                </Box>
+              ))}
+            </Box>
+            </Fade>
+            </ClickAwayListener>
+        )}
+        </Popper>        
     </Box>
   );
 }
