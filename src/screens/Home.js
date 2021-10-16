@@ -6,7 +6,7 @@ export default function Home() {
       Homepage
       <br></br>
       <br></br>
-      Buraya favoriye attığın itemlar gelebilir?
+      Buraya favoriye attığın itemlar gelebilir? (Slider olacak şekilde gelsin)
       <br></br>
       <br></br>
       En son baktığın itemlar gelebilir

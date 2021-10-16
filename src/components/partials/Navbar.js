@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,16 +8,12 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
 import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
-import ClickAwayListener from '@mui/material/ClickAwayListener';
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
@@ -86,10 +82,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const classes = useStyles();
 
@@ -98,30 +91,13 @@ export default function PrimarySearchAppBar() {
   console.log({ favorites });
   console.log({ anchorEl });
 
-  const handlePopperClick = (e) => {    
+  const handlePopperClick = (e) => {
     setAnchorEl(e.currentTarget);
     setOpen(!open);
-  }
+  };
 
-  const handleClickAway = () => {    
+  const handleClickAway = () => {
     setOpen(false);
-  };
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const renderMenuItems = pages.map((item, id) => (
@@ -129,36 +105,6 @@ export default function PrimarySearchAppBar() {
       <LinkItem to={`${item.to}`}>{item.title}</LinkItem>
     </MenuItem>
   ));
-
-  const menuId = "primary-search-account-menu";
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={favorites.length} color="error">
-            <FavoriteIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <Box sx={{ flexGrow: 1 }} className={classes.root}>
@@ -192,72 +138,75 @@ export default function PrimarySearchAppBar() {
           </Search>
           {renderMenuItems}
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ display: { xs: "flex", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show favorites"
               color="inherit"
             >
-              <Badge badgeContent={favorites.length} color="error" max={99} onClick={handlePopperClick}>
+              <Badge
+                badgeContent={favorites.length}
+                color="error"
+                max={99}
+                onClick={handlePopperClick}
+              >
                 <FavoriteIcon />
               </Badge>
-            </IconButton>            
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}      
 
-      <Popper id="test" open={open && favorites.length > 0} anchorEl={anchorEl} placement="bottom-start" transition>
+      <Popper
+        open={open && favorites.length > 0}
+        anchorEl={anchorEl}
+        placement="bottom-start"
+        transition
+      >
         {({ TransitionProps }) => (
           <ClickAwayListener onClickAway={handleClickAway}>
-          <Fade {...TransitionProps}>
-            <Box
-              sx={{
-                boxShadow: 3,
-                p: 1,
-                bgcolor: "background.paper",
-                maxWidth: "300px",
-                maxHeight: "350px",
-                overflow: "hidden",
-                overflowY: "auto",
-              }}
-            >
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3>Favorites</h3>
-              <small >{favorites.length} item</small>
-              </Box>              
-              {favorites.map((item) => (
+            <Fade {...TransitionProps}>
+              <Box
+                sx={{
+                  boxShadow: 3,
+                  p: 1,
+                  bgcolor: "background.paper",
+                  maxWidth: "300px",
+                  maxHeight: "350px",
+                  overflow: "hidden",
+                  overflowY: "auto",
+                }}
+              >
                 <Box
-                  key={item.id}
                   sx={{
                     display: "flex",
-                    justifyContent: "flex-start",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    background: "#f3f3f3",
                   }}
-                  my={1}
                 >
-                  <img src={item.image} alt={item.id} width="100"></img>
-                  <h5 style={{ marginLeft: "5px" }}>{item.title}</h5>
+                  <h3>Favorites</h3>
+                  <small>{favorites.length} item</small>
                 </Box>
-              ))}
-            </Box>
+                {favorites.map((item) => (
+                  <Box
+                    key={item.id}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      background: "#f3f3f3",
+                    }}
+                    my={1}
+                  >
+                    <img src={item.image} alt={item.id} width="100"></img>
+                    <h5 style={{ marginLeft: "5px" }}>{item.title}</h5>
+                  </Box>
+                ))}
+              </Box>
             </Fade>
-            </ClickAwayListener>
+          </ClickAwayListener>
         )}
-        </Popper>        
+      </Popper>
     </Box>
   );
 }
