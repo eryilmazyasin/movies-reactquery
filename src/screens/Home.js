@@ -13,6 +13,9 @@ export default function Home() {
       <br></br>
       <br></br>
       Karışık öneriler gelebilir
+      <br></br>
+      <br></br>
+      Kendi fake apini oluşturup movielerini post ettir.
     </div>
   );
 }

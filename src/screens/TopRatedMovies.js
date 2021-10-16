@@ -90,7 +90,7 @@ export default function TopRatedMovies() {
           : "Loading..."}
       </div>
 
-      <Pagination        
+      <Pagination
         resPage={resPage}
         page={page}
         setPage={setPage}

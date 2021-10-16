@@ -18,6 +18,7 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { pages } from "../../utils/constants";
+import { isNullOrUndefinedOrEmpty } from '../../utils/helpers';
 
 import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
 
@@ -92,8 +93,10 @@ export default function PrimarySearchAppBar() {
   console.log({ anchorEl });
 
   const handlePopperClick = (e) => {
-    setAnchorEl(e.currentTarget);
-    setOpen(!open);
+    if (favorites.length > 0) {
+      setAnchorEl(e.currentTarget);
+      setOpen(!open);
+    }
   };
 
   const handleClickAway = () => {
@@ -123,10 +126,12 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block" }, mr: '25px' }}
           >
             Movies API
-          </Typography>
+          </Typography>         
+          {renderMenuItems}
+          <Box sx={{ flexGrow: 1 }} />
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -136,19 +141,17 @@ export default function PrimarySearchAppBar() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          {renderMenuItems}
-          <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "flex", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show favorites"
               color="inherit"
+              onClick={handlePopperClick}
             >
               <Badge
                 badgeContent={favorites.length}
                 color="error"
-                max={99}
-                onClick={handlePopperClick}
+                max={99}                
               >
                 <FavoriteIcon />
               </Badge>
@@ -158,9 +161,9 @@ export default function PrimarySearchAppBar() {
       </AppBar>
 
       <Popper
-        open={open && favorites.length > 0}
+        open={open}
         anchorEl={anchorEl}
-        placement="bottom-start"
+        placement="bottom-end"
         transition
       >
         {({ TransitionProps }) => (
@@ -171,7 +174,7 @@ export default function PrimarySearchAppBar() {
                   boxShadow: 3,
                   p: 1,
                   bgcolor: "background.paper",
-                  maxWidth: "300px",
+                  width: "300px",
                   maxHeight: "350px",
                   overflow: "hidden",
                   overflowY: "auto",
@@ -199,7 +202,7 @@ export default function PrimarySearchAppBar() {
                     my={1}
                   >
                     <img src={item.image} alt={item.id} width="100"></img>
-                    <h5 style={{ marginLeft: "5px" }}>{item.title}</h5>
+                    <h5 style={{ margin: "0 5px" }}>{item.title}</h5>
                   </Box>
                 ))}
               </Box>

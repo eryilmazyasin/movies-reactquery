@@ -5,11 +5,9 @@ import { Routes } from '../routes/Routes';
 
 export default function Layout() {
   return (
-    <>
-      <Container maxWidth={false} disableGutters={true}>
-        <Navbar></Navbar>
-      </Container>
-      <Container style={{ padding: 10 }}>        
+    <>      
+      <Container style={{ padding: 10 }}>
+      <Navbar></Navbar>
         <Routes />
       </Container>
     </>
