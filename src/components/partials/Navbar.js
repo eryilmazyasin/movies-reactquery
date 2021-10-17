@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -21,6 +21,8 @@ import { makeStyles } from "@material-ui/core";
 import { pages } from "../../utils/constants";
 
 import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
+import { useSearchMovie } from "../../services/useSearchMovie";
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,14 +86,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
+  const [movie, setMovie] = useState('');
 
   const classes = useStyles();
+  const location = useLocation();
+  const queryClient = useQueryClient();
+
+  const currentPage = location.pathname;
 
   const { favorites, setOpenModal } = useGlobalState();
 
-  const location = useLocation();
+  //TODO: Input on change olduğunda payload'ı alamıyoruz.
+  const { status, data, error, isFetching } = useSearchMovie(movie);
 
-  const currentPage = location.pathname;
+  useEffect(() => {
+    console.log(movie);
+    setTimeout(() => {
+      queryClient.refetchQueries(['getSearchMovie', movie]);
+      console.log({ data });
+    }, 1000)    
+  }, [movie]);
 
   const handlePopperClick = (e) => {
     if (favorites.length > 0) {
@@ -102,6 +116,10 @@ export default function PrimarySearchAppBar() {
 
   const handleClickAway = () => {
     setOpen(false);
+  };
+
+  const handleOnChangeInput = (e) => {
+    setMovie(e.target.value);    
   };
 
   const renderMenuItems = pages.map((item, id) => (
@@ -140,6 +158,7 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="Search movie.."
               inputProps={{ "aria-label": "search" }}
+              onChange={handleOnChangeInput}
             />
           </Search>
           <Box sx={{ display: { xs: "flex", md: "flex" } }}>
@@ -199,7 +218,9 @@ export default function PrimarySearchAppBar() {
                       my={1}
                     >
                       <img src={item.image} alt={item.id} width="100"></img>
-                      <h5 style={{ margin: "0 5px", fontWeight: "500" }}>{item.title}</h5>
+                      <h5 style={{ margin: "0 5px", fontWeight: "500" }}>
+                        {item.title}
+                      </h5>
                     </Box>
                   </Link>
                 ))}
