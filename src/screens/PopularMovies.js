@@ -11,6 +11,7 @@ import { useQueryClient } from "react-query";
 //MUI
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from '@mui/material/CircularProgress';
 
 //Components
 import MovieDetail from "../components/MovieDetail";
@@ -93,7 +94,7 @@ export default function PopularMovies() {
                 </Link>
               </li>
             ))
-          : "Loading..."}
+          : <CircularProgress/>}
       </div>
 
       <Pagination        

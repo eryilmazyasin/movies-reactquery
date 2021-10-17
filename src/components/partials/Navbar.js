@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useQueryClient } from 'react-query';
 import { useLocation } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -22,7 +23,6 @@ import { pages } from "../../utils/constants";
 
 import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
 import { useSearchMovie } from "../../services/useSearchMovie";
-import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,7 +86,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const [movie, setMovie] = useState('');
+  const [movie, setMovie] = useState(null);
 
   const classes = useStyles();
   const location = useLocation();
@@ -96,16 +96,9 @@ export default function PrimarySearchAppBar() {
 
   const { favorites, setOpenModal } = useGlobalState();
 
-  //TODO: Input on change olduğunda payload'ı alamıyoruz.
-  const { status, data, error, isFetching } = useSearchMovie(movie);
+  const { status, data: searchResult, error, isFetching } = useSearchMovie(movie);
 
-  useEffect(() => {
-    console.log(movie);
-    setTimeout(() => {
-      queryClient.refetchQueries(['getSearchMovie', movie]);
-      console.log({ data });
-    }, 1000)    
-  }, [movie]);
+  console.log({ searchResult });
 
   const handlePopperClick = (e) => {
     if (favorites.length > 0) {
@@ -119,8 +112,8 @@ export default function PrimarySearchAppBar() {
   };
 
   const handleOnChangeInput = (e) => {
-    setMovie(e.target.value);    
-  };
+    setMovie(e.target.value);
+  }; 
 
   const renderMenuItems = pages.map((item, id) => (
     <MenuItem key={id}>

@@ -19,6 +19,9 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from '@mui/icons-material/Close';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 
 import { CDN } from "../utils/constants";
 
@@ -33,7 +36,17 @@ const useStyles = makeStyles((theme) => ({
       maxHeight: "180px",
       overflowY: "scroll",
     },
+    "& .MuiCircularProgress-root": {
+      position: 'absolute',
+     top: '0',
+     right: '0',
+     left: '0',
+    bottom: '0',
+     margin: 'auto',
+    zIndex: '9999'
+    }
   },
+ 
 }));
 
 const style = {
@@ -126,7 +139,8 @@ export default function Movies({ open, setOpen }) {
   }, [data]);
 
   return (
-    <div>
+    <div className={classes.root}>
+      { isFetching && <CircularProgress/> }
       {open && !isFetching && (
         <Modal
           open={open}
@@ -134,8 +148,8 @@ export default function Movies({ open, setOpen }) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
           className={classes.root}
-        >
-          <Card sx={({ maxWidth: 345 }, style)}>
+        >          
+          <Card sx={({ maxWidth: 345 }, style)}>          
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
