@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,7 +19,6 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { pages } from "../../utils/constants";
-import { isNullOrUndefinedOrEmpty } from '../../utils/helpers';
 
 import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
 
@@ -87,10 +87,11 @@ export default function PrimarySearchAppBar() {
 
   const classes = useStyles();
 
-  const { favorites } = useGlobalState();
+  const { favorites, setOpenModal } = useGlobalState();
 
-  console.log({ favorites });
-  console.log({ anchorEl });
+  const location = useLocation();
+
+  const currentPage = location.pathname;
 
   const handlePopperClick = (e) => {
     if (favorites.length > 0) {
@@ -126,10 +127,10 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" }, mr: '25px' }}
+            sx={{ display: { xs: "none", sm: "block" }, mr: "25px" }}
           >
             Movies API
-          </Typography>         
+          </Typography>
           {renderMenuItems}
           <Box sx={{ flexGrow: 1 }} />
           <Search>
@@ -148,11 +149,7 @@ export default function PrimarySearchAppBar() {
               color="inherit"
               onClick={handlePopperClick}
             >
-              <Badge
-                badgeContent={favorites.length}
-                color="error"
-                max={99}                
-              >
+              <Badge badgeContent={favorites.length} color="error" max={99}>
                 <FavoriteIcon />
               </Badge>
             </IconButton>
@@ -160,12 +157,7 @@ export default function PrimarySearchAppBar() {
         </Toolbar>
       </AppBar>
 
-      <Popper
-        open={open}
-        anchorEl={anchorEl}
-        placement="bottom-end"
-        transition
-      >
+      <Popper open={open} anchorEl={anchorEl} placement="bottom-end" transition>
         {({ TransitionProps }) => (
           <ClickAwayListener onClickAway={handleClickAway}>
             <Fade {...TransitionProps}>
@@ -191,19 +183,25 @@ export default function PrimarySearchAppBar() {
                   <small>{favorites.length} item</small>
                 </Box>
                 {favorites.map((item) => (
-                  <Box
+                  <Link
                     key={item.id}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      background: "#f3f3f3",
-                    }}
-                    my={1}
+                    to={`${currentPage}/${item.id}`}
+                    onClick={() => setOpenModal(true)}
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    <img src={item.image} alt={item.id} width="100"></img>
-                    <h5 style={{ margin: "0 5px" }}>{item.title}</h5>
-                  </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        background: "#f3f3f3",
+                      }}
+                      my={1}
+                    >
+                      <img src={item.image} alt={item.id} width="100"></img>
+                      <h5 style={{ margin: "0 5px", fontWeight: "500" }}>{item.title}</h5>
+                    </Box>
+                  </Link>
                 ))}
               </Box>
             </Fade>

@@ -16,6 +16,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import MovieDetail from "../components/MovieDetail";
 import Pagination from '../components/Pagination';
 
+import { useGlobalState } from '../providers/GlobalStateProvider';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -39,10 +41,11 @@ const useStyles = makeStyles((theme) => ({
 export default function PopularMovies() {
   const [page, setPage] = useState(1);
   const [listId, setListId] = useState(1);
-  const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
   const classes = useStyles();
+
+  const { openModal, setOpenModal } = useGlobalState();
 
   const { data, error, isPreviousData } = usePopularMovies(
     page,
@@ -64,8 +67,8 @@ export default function PopularMovies() {
     }
   }, [data, page, queryClient, listId]);
 
-  const movieDetailModal = open && (
-    <MovieDetail open={open} setOpen={setOpen} />
+  const movieDetailModal = openModal && (
+    <MovieDetail open={openModal} setOpen={setOpenModal} />
   );
 
   return (
@@ -84,7 +87,7 @@ export default function PopularMovies() {
               <li key={key}>
                 <Link
                   to={`/popularMovies/${movie.id}`}
-                  onClick={() => setOpen(true)}
+                  onClick={() => setOpenModal(true)}
                 >
                   {movie.original_title}
                 </Link>
