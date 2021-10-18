@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -15,11 +15,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
+import CircularProgress from "@mui/material/CircularProgress";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { pages } from "../../utils/constants";
+import Image from "../UI/Image";
 
 import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
 import { useSearchMovie } from "../../services/useSearchMovie";
@@ -87,6 +89,7 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const [movie, setMovie] = useState(null);
+  const [searchPopper, setSearchPopper] = useState(false);
 
   const classes = useStyles();
   const location = useLocation();
@@ -96,9 +99,12 @@ export default function PrimarySearchAppBar() {
 
   const { favorites, setOpenModal } = useGlobalState();
 
-  const { status, data: searchResult, error, isFetching } = useSearchMovie(movie);
-
-  console.log({ searchResult });
+  const {
+    status,
+    data: searchResult,
+    error,
+    isFetching,
+  } = useSearchMovie(movie);
 
   const handlePopperClick = (e) => {
     if (favorites.length > 0) {
@@ -109,11 +115,19 @@ export default function PrimarySearchAppBar() {
 
   const handleClickAway = () => {
     setOpen(false);
+    setSearchPopper(false);
   };
 
   const handleOnChangeInput = (e) => {
-    setMovie(e.target.value);
-  }; 
+    setAnchorEl(e.currentTarget);
+
+    if (e.target.value) {
+      setMovie(e.target.value);
+      setSearchPopper(true);
+    } else {
+      setSearchPopper(false);
+    }
+  };
 
   const renderMenuItems = pages.map((item, id) => (
     <MenuItem key={id}>
@@ -152,6 +166,7 @@ export default function PrimarySearchAppBar() {
               placeholder="Search movie.."
               inputProps={{ "aria-label": "search" }}
               onChange={handleOnChangeInput}
+              onClick={handleOnChangeInput}
             />
           </Search>
           <Box sx={{ display: { xs: "flex", md: "flex" } }}>
@@ -217,6 +232,91 @@ export default function PrimarySearchAppBar() {
                     </Box>
                   </Link>
                 ))}
+              </Box>
+            </Fade>
+          </ClickAwayListener>
+        )}
+      </Popper>
+
+      <Popper
+        open={searchPopper}
+        anchorEl={anchorEl}
+        placement="bottom-end"
+        transition
+      >
+        {({ TransitionProps }) => (
+          <ClickAwayListener onClickAway={handleClickAway}>
+            <Fade {...TransitionProps}>
+              <Box
+                sx={{
+                  boxShadow: 3,
+                  p: 1,
+                  bgcolor: "background.paper",
+                  width: "350px",
+                  maxHeight: "400px",
+                  overflow: "hidden",
+                  overflowY: "auto",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h3>Search Results</h3>
+                  <small>{searchResult?.results.length} item</small>
+                </Box>
+                {isFetching && <CircularProgress />}
+                {searchResult?.results?.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={`${currentPage}/${item.id}`}
+                    onClick={() => setOpenModal(true)}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        background: "#f3f3f3",
+                        minHeight: "30px",
+                      }}
+                      my={1}
+                    >
+                      {item.backdrop_path ? (
+                        <Image
+                          src={item.backdrop_path}
+                          alt={item.title}
+                          width="100"
+                        ></Image>
+                      ) : (
+                        <Box
+                          sx={{
+                            minWidth: "100px",
+                            height: "50px",
+                            background: "black",
+                            color: "white",
+                            textAlign: "center",
+                          }}
+                        >
+                          not found
+                        </Box>
+                      )}
+                      <h5 style={{ margin: "0 5px", fontWeight: "500" }}>
+                        {item.title}
+                      </h5>
+                    </Box>
+                  </Link>
+                ))}
+
+                {!searchResult?.results.length && !isFetching && (
+                  <Box sx={{ textAlign: "center", padding: "20px" }}>
+                    no result
+                  </Box>
+                )}
               </Box>
             </Fade>
           </ClickAwayListener>
