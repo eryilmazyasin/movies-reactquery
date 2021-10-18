@@ -268,7 +268,7 @@ export default function PrimarySearchAppBar() {
                   <h3>Search Results</h3>
                   <small>{searchResult?.results.length} item</small>
                 </Box>
-                {isFetching && <CircularProgress />}
+                {isFetching && <CircularProgress sx={{ margin: '0 auto', display: 'inherit' }} />}
                 {searchResult?.results?.map((item) => (
                   <Link
                     key={item.id}
