@@ -11,16 +11,15 @@ import { useQueryClient } from "react-query";
 //MUI
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Grid';
-
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
 
 //Components
 import MovieDetail from "../components/MovieDetail";
-import Pagination from '../components/Pagination';
-import Image from '../components/UI/Image';
+import Pagination from "../components/Pagination";
+import Image from "../components/UI/Image";
 
-import { useGlobalState } from '../providers/GlobalStateProvider';
+import { useGlobalState } from "../providers/GlobalStateProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
     },
     "& a ": {
       fontSize: 16,
-      color: 'black',
-      textDecoration: 'none',
-      margin: 5,      
-    }
+      color: "black",
+      textDecoration: "none",
+      margin: 5,
+    },
   },
   title: {
     display: "flex",
@@ -41,22 +40,22 @@ const useStyles = makeStyles((theme) => ({
     gap: "20px",
   },
   movieBox: {
-    display: 'block',
-    position: 'relative',    
+    display: "block",
+    position: "relative",
   },
   movieTitle: {
-    position: 'absolute',
-    inset: '0 0 0 0',
-    color: 'white',
-    background: 'rgba(0,0,0, .5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    '&:hover': {
-      background: 'transparent',
-      color: 'white'
-  }
-  }
+    position: "absolute",
+    inset: "0 0 0 0",
+    color: "white",
+    background: "rgba(0,0,0, .5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    "&:hover": {
+      background: "transparent",
+      color: "white",
+    },
+  },
 }));
 
 export default function TopRatedMovies() {
@@ -81,13 +80,16 @@ export default function TopRatedMovies() {
   // Prefetch the next page!
   useEffect(() => {
     if (data?.total_pages > 1) {
-      queryClient.prefetchQuery(["getTopRatedMovies", page + 1, listId + 1], () =>
-        getTopRatedMovies(page + 1, listId + 1)
+      queryClient.prefetchQuery(
+        ["getTopRatedMovies", page + 1, listId + 1],
+        () => getTopRatedMovies(page + 1, listId + 1)
       );
     }
   }, [data, page, queryClient, listId]);
 
-  const movieDetailModal = openModal && <MovieDetail open={openModal} setOpen={setOpenModal} />;  
+  const movieDetailModal = openModal && (
+    <MovieDetail open={openModal} setOpen={setOpenModal} />
+  );
 
   return (
     <>
@@ -100,10 +102,10 @@ export default function TopRatedMovies() {
           <h2>{pages[2].title}</h2>
         </div>
         <Divider style={{ marginBottom: 20 }} />
-        <Grid container spacing="2">        
-        {data?.results.length > 0
-            ? data?.results.map((movie, key) => (
-            <Grid xs={3} key={key} spacing="2">
+        <Grid container spacing="2">
+          {data?.results.length > 0 ? (
+            data?.results.map((movie, key) => (
+              <Grid xs={3} key={key} spacing="2">
                 <Link
                   to={`/topRatedMovies/${movie.id}`}
                   onClick={() => setOpenModal(true)}
@@ -111,11 +113,13 @@ export default function TopRatedMovies() {
                 >
                   <Image src={movie.backdrop_path} width="100%"></Image>
                   <h5 className={classes.movieTitle}>{movie.original_title}</h5>
-                </Link>                
-                </Grid>
+                </Link>
+              </Grid>
             ))
-            : <CircularProgress />}
-          </Grid>
+          ) : (
+            <CircularProgress />
+          )}
+        </Grid>
       </div>
 
       <Pagination
@@ -124,7 +128,7 @@ export default function TopRatedMovies() {
         setPage={setPage}
         isPreviousData={isPreviousData}
         resTotalPage={resTotalPage}
-        totalPageRef={totalPageRef}      
+        totalPageRef={totalPageRef}
       />
 
       {movieDetailModal}

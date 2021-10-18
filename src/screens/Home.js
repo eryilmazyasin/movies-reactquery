@@ -16,6 +16,12 @@ export default function Home() {
       <br></br>
       <br></br>
       Kendi fake apini oluşturup movielerini post ettir.
+      <br></br>
+      <br></br>
+      Movielerin listelendiği yerde skeleton kullan.
+      <br></br>
+      <br></br>
+      Verileri localstorage'da sakla
     </div>
   );
 }
