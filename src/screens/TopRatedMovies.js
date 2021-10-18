@@ -12,10 +12,13 @@ import { useQueryClient } from "react-query";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+
 
 //Components
 import MovieDetail from "../components/MovieDetail";
 import Pagination from '../components/Pagination';
+import Image from '../components/UI/Image';
 
 import { useGlobalState } from '../providers/GlobalStateProvider';
 
@@ -28,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 16,
       color: 'black',
       textDecoration: 'none',
-      padding: 5,      
+      margin: 5,      
     }
   },
   title: {
@@ -37,6 +40,23 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     gap: "20px",
   },
+  movieBox: {
+    display: 'block',
+    position: 'relative',    
+  },
+  movieTitle: {
+    position: 'absolute',
+    inset: '0 0 0 0',
+    color: 'white',
+    background: 'rgba(0,0,0, .5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '&:hover': {
+      background: 'transparent',
+      color: 'white'
+  }
+  }
 }));
 
 export default function TopRatedMovies() {
@@ -79,19 +99,23 @@ export default function TopRatedMovies() {
           {error}
           <h2>{pages[2].title}</h2>
         </div>
-        <Divider style={{ marginBottom: 20 }}/>
+        <Divider style={{ marginBottom: 20 }} />
+        <Grid container spacing="2">        
         {data?.results.length > 0
-          ? data?.results.map((movie, key) => (
-              <li key={key}>
+            ? data?.results.map((movie, key) => (
+            <Grid xs={3} key={key} spacing="2">
                 <Link
                   to={`/topRatedMovies/${movie.id}`}
                   onClick={() => setOpenModal(true)}
+                  className={classes.movieBox}
                 >
-                  {movie.original_title}
-                </Link>
-              </li>
+                  <Image src={movie.backdrop_path} width="100%"></Image>
+                  <h5 className={classes.movieTitle}>{movie.original_title}</h5>
+                </Link>                
+                </Grid>
             ))
-          : <CircularProgress/>}
+            : <CircularProgress />}
+          </Grid>
       </div>
 
       <Pagination
