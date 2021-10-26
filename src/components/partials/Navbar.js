@@ -95,6 +95,8 @@ export default function PrimarySearchAppBar() {
   const location = useLocation();
   const queryClient = useQueryClient();
 
+  const timer = React.useRef();
+
   const currentPage = location.pathname;
 
   const { favorites, setOpenModal } = useGlobalState();
@@ -120,11 +122,23 @@ export default function PrimarySearchAppBar() {
 
   const handleOnChangeInput = (e) => {
     setAnchorEl(e.currentTarget);
-
+    
     if (e.target.value) {
-      setMovie(e.target.value);
+
+      if (timer.current) {   
+        clearTimeout(timer.current)        
+      }
+      
+      if (e.target.value.length <= 2) {
+        setMovie(e.target.value);
+      } else {        
+        timer.current = setTimeout(() => {
+          setMovie(e.target.value);
+        }, 900)        
+      }
+
       setSearchPopper(true);
-    } else {
+    } else {      
       setSearchPopper(false);
     }
   };
