@@ -124,11 +124,10 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(e.currentTarget);
     
     if (e.target.value) {
-
       if (timer.current) {   
         clearTimeout(timer.current)        
       }
-      
+
       if (e.target.value.length <= 2) {
         setMovie(e.target.value);
       } else {        
