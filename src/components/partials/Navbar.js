@@ -13,15 +13,13 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import Popper from "@mui/material/Popper";
-import Fade from "@mui/material/Fade";
-import CircularProgress from "@mui/material/CircularProgress";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+
 
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { pages } from "../../utils/constants";
-import Image from "../UI/Image";
+import FavoritesPopper from '../Navbar/FavoritesPopper';
+import SearchPopper from '../Navbar/SearchPopper';
 
 import { useGlobalState } from "../../../src/providers/GlobalStateProvider";
 import { useSearchMovie } from "../../services/useSearchMovie";
@@ -122,22 +120,22 @@ export default function PrimarySearchAppBar() {
 
   const handleOnChangeInput = (e) => {
     setAnchorEl(e.currentTarget);
-    
+
     if (e.target.value) {
-      if (timer.current) {   
-        clearTimeout(timer.current)        
+      if (timer.current) {
+        clearTimeout(timer.current)
       }
 
       if (e.target.value.length <= 2) {
         setMovie(e.target.value);
-      } else {        
+      } else {
         timer.current = setTimeout(() => {
           setMovie(e.target.value);
-        }, 900)        
+        }, 900)
       }
 
       setSearchPopper(true);
-    } else {      
+    } else {
       setSearchPopper(false);
     }
   };
@@ -197,144 +195,8 @@ export default function PrimarySearchAppBar() {
         </Toolbar>
       </AppBar>
 
-      <Popper open={open} anchorEl={anchorEl} placement="bottom-end" transition>
-        {({ TransitionProps }) => (
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <Fade {...TransitionProps}>
-              <Box
-                sx={{
-                  boxShadow: 3,
-                  p: 1,
-                  bgcolor: "background.paper",
-                  width: "300px",
-                  maxHeight: "350px",
-                  overflow: "hidden",
-                  overflowY: "auto",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <h3>Favorites</h3>
-                  <small>{favorites.length} item</small>
-                </Box>
-                {favorites.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`${currentPage}/${item.id}`}
-                    onClick={() => setOpenModal(true)}
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                        background: "#f3f3f3",
-                      }}
-                      my={1}
-                    >
-                      <img src={item.image} alt={item.id} width="100"></img>
-                      <h5 style={{ margin: "0 5px", fontWeight: "500" }}>
-                        {item.title}
-                      </h5>
-                    </Box>
-                  </Link>
-                ))}
-              </Box>
-            </Fade>
-          </ClickAwayListener>
-        )}
-      </Popper>
-
-      <Popper
-        open={searchPopper}
-        anchorEl={anchorEl}
-        placement="bottom-end"
-        transition
-      >
-        {({ TransitionProps }) => (
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <Fade {...TransitionProps}>
-              <Box
-                sx={{
-                  boxShadow: 3,
-                  p: 1,
-                  bgcolor: "background.paper",
-                  width: "350px",
-                  maxHeight: "400px",
-                  overflow: "hidden",
-                  overflowY: "auto",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <h3>Search Results</h3>
-                  <small>{searchResult?.results.length} item</small>
-                </Box>
-                {isFetching && <CircularProgress sx={{ margin: '0 auto', display: 'inherit' }} />}
-                {searchResult?.results?.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`${currentPage}/${item.id}`}
-                    onClick={() => setOpenModal(true)}
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                        background: "#f3f3f3",
-                        minHeight: "30px",
-                      }}
-                      my={1}
-                    >
-                      {item.backdrop_path ? (
-                        <Image
-                          src={item.backdrop_path}
-                          alt={item.title}
-                          width="100"
-                        ></Image>
-                      ) : (
-                        <Box
-                          sx={{
-                            minWidth: "100px",
-                            height: "50px",
-                            background: "black",
-                            color: "white",
-                            textAlign: "center",
-                          }}
-                        >
-                          not found
-                        </Box>
-                      )}
-                      <h5 style={{ margin: "0 5px", fontWeight: "500" }}>
-                        {item.title}
-                      </h5>
-                    </Box>
-                  </Link>
-                ))}
-
-                {!searchResult?.results.length && !isFetching && (
-                  <Box sx={{ textAlign: "center", padding: "20px" }}>
-                    no result
-                  </Box>
-                )}
-              </Box>
-            </Fade>
-          </ClickAwayListener>
-        )}
-      </Popper>
+      <FavoritesPopper favorites={favorites} setOpenModal={setOpenModal} anchorEl={anchorEl} handleClickAway={handleClickAway} open={open} />
+      <SearchPopper searchResult={searchResult} isFetching={isFetching} setOpenModal={setOpenModal} anchorEl={anchorEl} handleClickAway={handleClickAway} open={searchPopper} />
     </Box>
   );
 }
