@@ -15,15 +15,22 @@ const useStyles = makeStyles((theme) => ({
       color: "black",
       textDecoration: "none",
       padding: 5,
-        },
-        "& .MuiDivider-root": {
-        margin: '20px 0'
-    }
+    },
+    "& .MuiDivider-root": {
+      margin: "20px 0",
+    },
+    "& .MuiButton-root": {
+      backgroundColor: "#252b31",
+      "&:hover": {
+        backgroundColor: "#252b31b0",
+      },
+    },
   },
 }));
 
 export default function Pagination(props) {
-  const { resPage, page, setPage, isPreviousData, resTotalPage, totalPageRef } = props;
+  const { resPage, page, setPage, isPreviousData, resTotalPage, totalPageRef } =
+    props;
 
   const classes = useStyles();
 
@@ -36,20 +43,20 @@ export default function Pagination(props) {
   };
 
   return (
-      <div className={classes.root}>
-          <Divider />
+    <div className={classes.root}>
+      <Divider />
       <Button variant="contained" onClick={prevPage} disabled={resPage === 1}>
-        Prev
-      </Button>
-      <span>{page}</span>
+        Prev{" "}
+      </Button>{" "}
+      <span> {page} </span>{" "}
       <Button
         variant="contained"
         onClick={nextPage}
         disabled={isPreviousData || resTotalPage <= resPage}
       >
-        Next
-      </Button>       
-        <small ref={totalPageRef}>Total Page: {resTotalPage}</small>      
+        Next{" "}
+      </Button>{" "}
+      <small ref={totalPageRef}> Total Page: {resTotalPage} </small>{" "}
     </div>
   );
 }
